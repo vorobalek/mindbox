@@ -3,9 +3,9 @@ import { Footer } from "./components/Footer";
 import { Hero } from "./components/Hero";
 import { PwaInstallCard } from "./components/PwaInstallCard";
 import { QuickActions } from "./components/QuickActions";
-import { EmbeddedConsole } from "./components/EmbeddedConsole/EmbeddedConsole";
-import { useEmbeddedConsole } from "./embeddedConsole/useEmbeddedConsole";
-import { getSandboxConfig, resolveSandboxRuntimeConfig } from "./lib/runtimeConfig";
+import { EmbeddedConsole } from "./components/EmbeddedConsole";
+import { useEmbeddedConsole } from "./hooks/useEmbeddedConsole";
+import { getSandboxConfig, resolveSandboxRuntimeConfig } from "./utils/runtimeConfig";
 
 export function App() {
   const cfg = useMemo(() => getSandboxConfig(), []);

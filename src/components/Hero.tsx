@@ -1,4 +1,4 @@
-import type { SandboxVariant } from "../lib/runtimeConfig";
+import type { SandboxVariant } from "../utils/runtimeConfig";
 
 export function Hero(props: {
   variant: SandboxVariant;

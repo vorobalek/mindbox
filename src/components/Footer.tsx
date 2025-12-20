@@ -1,4 +1,4 @@
-import type { SandboxVariant } from "../lib/runtimeConfig";
+import type { SandboxVariant } from "../utils/runtimeConfig";
 
 export function Footer(props: { variant: SandboxVariant; path: string }) {
   const { variant, path } = props;

@@ -1,4 +1,4 @@
-import { escapeHtml } from "../lib/escapeHtml";
+import { escapeHtml } from "./escapeHtml";
 
 function highlightJson(json: string): string {
   const escaped = escapeHtml(json);

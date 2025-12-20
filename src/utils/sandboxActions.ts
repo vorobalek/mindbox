@@ -1,4 +1,4 @@
-import { escapeHtml } from "../lib/escapeHtml";
+import { escapeHtml } from "./escapeHtml";
 import { formatValueHtml } from "./format";
 
 export type AppendLine = (level: string, bodyHtml: string, t?: number) => void;

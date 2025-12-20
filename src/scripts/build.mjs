@@ -5,9 +5,9 @@ import { fileURLToPath } from "node:url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const projectRoot = path.resolve(__dirname, ".."); // src/frontend
-const repoRoot = path.resolve(projectRoot, "../.."); // repo root
-const outDir = path.resolve(repoRoot, "nginx/html/app");
+const projectRoot = path.resolve(__dirname, ".."); // src
+const repoRoot = path.resolve(projectRoot, ".."); // repo root
+const outDir = path.resolve(repoRoot, "dist");
 
 const watch = process.argv.includes("--watch");
 const dev = process.argv.includes("--dev") || watch;
@@ -15,8 +15,8 @@ const dev = process.argv.includes("--dev") || watch;
 const buildOptions = {
   absWorkingDir: projectRoot,
   entryPoints: {
-    bootstrap: "src/entries/bootstrap.ts",
-    sandbox: "src/entries/sandbox.tsx"
+    bootstrap: "entries/bootstrap.ts",
+    sandbox: "entries/sandbox.tsx"
   },
   outdir: outDir,
   entryNames: "[name]",

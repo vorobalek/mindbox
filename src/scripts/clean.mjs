@@ -5,9 +5,9 @@ import { fileURLToPath } from "node:url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const projectRoot = path.resolve(__dirname, ".."); // src/frontend
-const repoRoot = path.resolve(projectRoot, "../.."); // repo root
-const outDir = path.resolve(repoRoot, "nginx/html/app");
+const projectRoot = path.resolve(__dirname, ".."); // src
+const repoRoot = path.resolve(projectRoot, ".."); // repo root
+const outDir = path.resolve(repoRoot, "dist");
 
 const targets = [
   path.join(outDir, "bootstrap.js"),

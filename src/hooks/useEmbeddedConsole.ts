@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { escapeHtml } from "../lib/escapeHtml";
-import { evalJs } from "./evalJs";
-import { formatValueHtml } from "./format";
-import { createSandboxActions, type SandboxActions } from "./sandboxActions";
+import { escapeHtml } from "../utils/escapeHtml";
+import { evalJs } from "../utils/evalJs";
+import { formatValueHtml } from "../utils/format";
+import { createSandboxActions, type SandboxActions } from "../utils/sandboxActions";
 import { useCommandHistory } from "./useCommandHistory";
 
 export interface ConsoleLine {

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { KeyboardEvent } from "react";
-import type { EmbeddedConsoleModel } from "../../embeddedConsole/useEmbeddedConsole";
+import type { EmbeddedConsoleModel } from "../hooks/useEmbeddedConsole";
 
 function timeLabel(t: number): string {
   try {

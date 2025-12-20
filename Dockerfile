@@ -8,7 +8,7 @@ FROM node:current-alpine AS frontend-build
 WORKDIR /work
 
 # 1) Install deps (best cache hit)
-COPY src/frontend/package.json src/frontend/package-lock.json ./src/frontend/
+COPY src/package.json src/frontend/package-lock.json ./src/frontend/
 RUN cd src/frontend && npm ci
 
 # 2) Copy sources + static HTML (build writes into nginx/html/app)
@@ -23,6 +23,6 @@ FROM nginx:latest
 COPY nginx/conf.d/ /etc/nginx/conf.d/
 
 # copy built html + assets
-COPY --from=frontend-build /work/nginx/html/ /usr/share/nginx/html/
+COPY --from=frontend-build /work/dist /usr/share/nginx/html/
 
 CMD ["nginx", "-g", "daemon off;"]
