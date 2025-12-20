@@ -173,8 +173,12 @@
 
     var ua = navigator.userAgent || "";
     var isIOS = /iPad|iPhone|iPod/.test(ua) || (ua.indexOf("Mac") >= 0 && "ontouchend" in document);
+    var maxTouchPoints = (navigator.maxTouchPoints || 0);
+    var isTouch = maxTouchPoints > 0;
 
-    var isMobile = mm("(pointer: coarse)") || mm("(hover: none)");
+    // iOS Safari may not reliably support pointer/hover media queries on some versions,
+    // so keep iOS/touch fallbacks to ensure the install hint appears.
+    var isMobile = isIOS || isTouch || mm("(pointer: coarse)") || mm("(hover: none)");
     var isStandalone = (mm("(display-mode: standalone)") || window.navigator.standalone === true);
 
     function isDismissed() {
@@ -201,17 +205,23 @@
         return;
       }
 
-      // Android/Chromium flow: show when we have a prompt
+      // Android/Chromium flow: show the card on mobile; enable the button once `beforeinstallprompt` is available.
+      show();
+      btnInstall.style.display = "";
+
+      var isProbablySecure = (location.protocol === "https:" || location.hostname === "localhost" || location.hostname === "127.0.0.1");
+
       if (deferredPrompt) {
-        show();
-        btnInstall.style.display = "";
         btnInstall.disabled = false;
         setText("Можно установить приложение и открывать его в отдельном окне.");
         return;
       }
 
-      // Not yet available — keep hidden to avoid noisy banners.
-      hide();
+      btnInstall.disabled = true;
+      setText(
+        "Чтобы установить: открой меню браузера → <code>Установить приложение</code> / <code>Добавить на главный экран</code>." +
+        (isProbablySecure ? "" : "<br><br><span class=\"tok-dim\">Для установки в Chrome нужен HTTPS (или localhost).</span>")
+      );
     }
 
     window.addEventListener("beforeinstallprompt", function (e) {
