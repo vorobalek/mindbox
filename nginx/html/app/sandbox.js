@@ -502,7 +502,15 @@
     appendLine("info", "Embedded console ready. Type <span class=\"tok-string\">help</span> or run JS.", Date.now());
     flushBufferedConsole();
 
-    input.focus();
+    // Don't auto-focus on touch devices (mobile browsers can zoom the viewport on focused inputs).
+    try {
+      var isCoarsePointer = window.matchMedia && window.matchMedia("(pointer: coarse)").matches;
+      var isHoverNone = window.matchMedia && window.matchMedia("(hover: none)").matches;
+      var shouldAutofocus = !(isCoarsePointer || isHoverNone);
+      if (cfg && cfg.autoFocusInput === true) shouldAutofocus = true;
+      if (cfg && cfg.autoFocusInput === false) shouldAutofocus = false;
+      if (shouldAutofocus) input.focus();
+    } catch (e) {}
   })();
 })();
 
