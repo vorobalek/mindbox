@@ -74,18 +74,6 @@
       '  </div>' +
       '</header>' +
 
-      '<section class="card">' +
-      '  <h2>Немного filler-контента</h2>' +
-      '  <p class="muted">' +
-      '    Небольшие блоки и подсказки для ручных проверок: загрузка трекера, Service Worker, логи, ошибки и сетевые запросы.' +
-      '  </p>' +
-      '  <ul class="list">' +
-      '    <li><strong>Точка входа</strong>: статический HTML, без сборки и внешних UI-библиотек.</li>' +
-      '    <li><strong>Сценарий</strong>: ниже — встроенная консоль (REPL), которая дублирует <code>console.*</code>.</li>' +
-      '    <li><strong>Форматирование</strong>: объекты печатаются как JSON с подсветкой.</li>' +
-      '  </ul>' +
-      '</section>' +
-
       '<section class="card" id="pwa-card" style="display:none">' +
       '  <h2>Установить как приложение</h2>' +
       '  <p class="muted" id="pwa-desc"></p>' +

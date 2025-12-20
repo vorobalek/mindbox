@@ -141,14 +141,6 @@ p {
   border-radius: 14px;
 }
 
-.list {
-  margin: 10px 0 0;
-  padding-left: 18px;
-}
-
-.list li { margin: 6px 0; color: rgba(255,255,255,0.82); }
-.list strong { color: rgba(255,255,255,0.94); }
-
 code {
   font-family: var(--mono);
   font-size: 0.95em;

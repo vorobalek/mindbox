@@ -54,18 +54,6 @@
     };
   })();
 
-  // Mindbox stub + init (must run before tracker script executes)
-  (function () {
-    var cfg = window.__SANDBOX_CONFIG || {};
-    var endpointId = cfg.endpointId || "testing.vorobalek";
-
-    window.mindbox = window.mindbox || function () { window.mindbox.queue.push(arguments); };
-    window.mindbox.queue = window.mindbox.queue || [];
-
-    try { window.mindbox("create", { endpointId: endpointId }); } catch (e) {}
-    try { window.mindbox("webpush.create"); } catch (e) {}
-  })();
-
   // Forward global errors into console
   (function () {
     if (window.__mindboxSandboxErrorHooks) return;
