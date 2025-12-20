@@ -1,0 +1,27 @@
+name: Build and Push Docker Image to Yandex Cloud CR
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Login to Yandex Cloud Container Registry
+        id: login-cr
+        uses: yc-actions/yc-cr-login@v3
+        with:
+          yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
+
+      - name: Build and push image
+        env:
+          IMAGE_NAME: cr.yandex/crpj1p5npsnemiijgjbr/mindbox
+          IMAGE_TAG: latest
+        run: |
+          docker build -t $IMAGE_NAME:$IMAGE_TAG . --pull
+          docker push $IMAGE_NAME:$IMAGE_TAG
