@@ -1,0 +1,23 @@
+{
+  "name": "mindbox-sandbox-frontend",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "build:watch": "node scripts/build.mjs --watch",
+    "build:dev": "node scripts/build.mjs --dev",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "clean": "node scripts/clean.mjs"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "esbuild": "^0.24.2",
+    "typescript": "^5.7.2"
+  }
+}

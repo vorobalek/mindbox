@@ -1,10 +1,28 @@
+#
+# Multi-stage build:
+# - build React+TS frontend from `src/frontend`
+# - serve static HTML + built artifacts via nginx
+#
+
+FROM node:current-alpine AS frontend-build
+WORKDIR /work
+
+# 1) Install deps (best cache hit)
+COPY src/frontend/package.json src/frontend/package-lock.json ./src/frontend/
+RUN cd src/frontend && npm ci
+
+# 2) Copy sources + static HTML (build writes into nginx/html/app)
+COPY src/frontend/ ./src/frontend/
+COPY nginx/html/ ./nginx/html/
+
+RUN cd src/frontend && npm run build
+
 FROM nginx:latest
 
-# copy all files from nginx/conf.d to /etc/nginx/conf.d
+# copy nginx config
 COPY nginx/conf.d/ /etc/nginx/conf.d/
 
-#copy all nginx/html to /usr/share/nginx/html
-COPY nginx/html/ /usr/share/nginx/html/
+# copy built html + assets
+COPY --from=frontend-build /work/nginx/html/ /usr/share/nginx/html/
 
-# run nginx
 CMD ["nginx", "-g", "daemon off;"]
