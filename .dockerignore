@@ -3,5 +3,4 @@
 .github
 .gitignore
 Dockerfile
-src
 dist
