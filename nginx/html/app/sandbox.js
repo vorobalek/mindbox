@@ -24,6 +24,9 @@
 
   var defaultFetchUrl = String(cfg.defaultFetchUrl || "/mindbox-tracker.js");
   var serviceWorkerPath = String(cfg.serviceWorkerPath || "/mindbox-services-worker.js");
+  var switchToBasePath = String(cfg.switchToPath || (variant === "proxy" ? "/" : "/proxy/"));
+  var switchToUrl = switchToBasePath + (location.search || "") + (location.hash || "");
+  var switchLabel = variant === "proxy" ? "Открыть /" : "Открыть /proxy/";
 
   function escapeHtml(s) {
     return String(s)
@@ -50,7 +53,10 @@
       '<header class="hero">' +
       '  <div class="hero__title-row">' +
       '    <h1>Integration sandbox</h1>' +
-      '    <span class="badge">' + escapeHtml(badge) + ' · <code>' + escapeHtml(path) + '</code></span>' +
+      '    <div class="hero__tools">' +
+      '      <button type="button" class="btn-ghost" data-action="switch-page">' + escapeHtml(switchLabel) + "</button>" +
+      '      <span class="badge">' + escapeHtml(badge) + ' · <code>' + escapeHtml(path) + '</code></span>' +
+      '    </div>' +
       '  </div>' +
       '  <p class="muted">' +
       '    Тестовая страница для проверки загрузки трекера, работы Service Worker и сценариев web push. ' +
@@ -78,6 +84,15 @@
       '    <li><strong>Сценарий</strong>: ниже — встроенная консоль (REPL), которая дублирует <code>console.*</code>.</li>' +
       '    <li><strong>Форматирование</strong>: объекты печатаются как JSON с подсветкой.</li>' +
       '  </ul>' +
+      '</section>' +
+
+      '<section class="card" id="pwa-card" style="display:none">' +
+      '  <h2>Установить как приложение</h2>' +
+      '  <p class="muted" id="pwa-desc"></p>' +
+      '  <div class="actions">' +
+      '    <button type="button" data-pwa="install" id="pwa-install">Установить</button>' +
+      '    <button type="button" class="btn-ghost" data-pwa="dismiss">Скрыть</button>' +
+      '  </div>' +
       '</section>' +
 
       '<section class="card">' +
@@ -128,6 +143,113 @@
   }
 
   renderApp();
+
+  // Register SW (required for installability on most browsers). Uses the same SW as push integration.
+  if (cfg && cfg.pwa === false) {
+    // disabled
+  } else if ("serviceWorker" in navigator) {
+    try {
+      navigator.serviceWorker.register(serviceWorkerPath).catch(function (err) {
+        try { console.warn(err); } catch (e) {}
+      });
+    } catch (e) {}
+  }
+
+  // PWA install prompt UI (mobile-first)
+  (function () {
+    if (cfg && cfg.pwaInstallPrompt === false) return;
+
+    var card = document.getElementById("pwa-card");
+    var desc = document.getElementById("pwa-desc");
+    var btnInstall = document.getElementById("pwa-install");
+    var btnDismiss = card ? card.querySelector('[data-pwa="dismiss"]') : null;
+    if (!card || !desc || !btnInstall || !btnDismiss) return;
+
+    var dismissKey = "__pwaInstallDismissed:v1";
+
+    function mm(q) {
+      try { return window.matchMedia && window.matchMedia(q).matches; } catch (e) { return false; }
+    }
+
+    var ua = navigator.userAgent || "";
+    var isIOS = /iPad|iPhone|iPod/.test(ua) || (ua.indexOf("Mac") >= 0 && "ontouchend" in document);
+
+    var isMobile = mm("(pointer: coarse)") || mm("(hover: none)");
+    var isStandalone = (mm("(display-mode: standalone)") || window.navigator.standalone === true);
+
+    function isDismissed() {
+      try { return localStorage.getItem(dismissKey) === "1"; } catch (e) { return false; }
+    }
+    function dismiss() {
+      try { localStorage.setItem(dismissKey, "1"); } catch (e) {}
+      hide();
+    }
+    function show() { card.style.display = ""; }
+    function hide() { card.style.display = "none"; }
+
+    function setText(html) { desc.innerHTML = html; }
+
+    var deferredPrompt = (window.__pwaInstall && window.__pwaInstall.deferredPrompt) ? window.__pwaInstall.deferredPrompt : null;
+
+    function updateUI() {
+      if (!isMobile || isStandalone || isDismissed()) { hide(); return; }
+
+      if (isIOS) {
+        show();
+        btnInstall.style.display = "none";
+        setText("На iOS установка выполняется через меню <code>Поделиться</code> → <code>На экран Домой</code>.");
+        return;
+      }
+
+      // Android/Chromium flow: show when we have a prompt
+      if (deferredPrompt) {
+        show();
+        btnInstall.style.display = "";
+        btnInstall.disabled = false;
+        setText("Можно установить приложение и открывать его в отдельном окне.");
+        return;
+      }
+
+      // Not yet available — keep hidden to avoid noisy banners.
+      hide();
+    }
+
+    window.addEventListener("beforeinstallprompt", function (e) {
+      deferredPrompt = e;
+      try { e.preventDefault(); } catch (err) {}
+      try {
+        if (window.__pwaInstall) window.__pwaInstall.deferredPrompt = e;
+      } catch (err2) {}
+      updateUI();
+    });
+
+    window.addEventListener("appinstalled", function () {
+      deferredPrompt = null;
+      dismiss();
+    });
+
+    btnDismiss.addEventListener("click", dismiss);
+
+    btnInstall.addEventListener("click", function () {
+      if (!deferredPrompt) {
+        try { console.warn("Install prompt is not available yet."); } catch (e) {}
+        return;
+      }
+
+      try {
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then(function () {
+          deferredPrompt = null;
+          updateUI();
+        });
+      } catch (e) {
+        try { console.warn(e); } catch (err) {}
+      }
+    });
+
+    // Initial state (for iOS)
+    updateUI();
+  })();
 
   (function () {
     var output = document.getElementById("console-output");
@@ -485,6 +607,7 @@
     document.querySelectorAll("[data-action]").forEach(function (btn) {
       btn.addEventListener("click", function () {
         var action = btn.getAttribute("data-action");
+        if (action === "switch-page") { try { location.assign(switchToUrl); } catch (e) { location.href = switchToUrl; } }
         if (action === "emit-log") console.log("hello from button", { ok: true, ts: Date.now(), path: location.pathname });
         if (action === "emit-warn") console.warn("warning example", { hint: "this is a sandbox", at: new Date().toISOString() });
         if (action === "emit-error") console.error(new Error("example error (button)"));

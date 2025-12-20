@@ -81,6 +81,23 @@
       try { console.error(ev.reason || "Unhandled rejection"); } catch (e) {}
     });
   })();
+
+  // Capture PWA install prompt as early as possible (some browsers may fire it before UI scripts load)
+  ;(function () {
+    if (window.__pwaInstallPromptCapture) return;
+    window.__pwaInstallPromptCapture = true;
+    window.__pwaInstall = window.__pwaInstall || { deferredPrompt: null, installed: false };
+
+    window.addEventListener("beforeinstallprompt", function (e) {
+      try { e.preventDefault(); } catch (err) {}
+      try { window.__pwaInstall.deferredPrompt = e; } catch (err2) {}
+    });
+
+    window.addEventListener("appinstalled", function () {
+      try { window.__pwaInstall.installed = true; } catch (err) {}
+      try { window.__pwaInstall.deferredPrompt = null; } catch (err2) {}
+    });
+  })();
 })();
 
 

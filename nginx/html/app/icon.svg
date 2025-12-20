@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <defs>
+    <radialGradient id="g1" cx="22%" cy="0%" r="80%">
+      <stop offset="0%" stop-color="#60a5fa" stop-opacity="0.42"/>
+      <stop offset="60%" stop-color="#60a5fa" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="g2" cx="92%" cy="12%" r="70%">
+      <stop offset="0%" stop-color="#34d399" stop-opacity="0.28"/>
+      <stop offset="55%" stop-color="#34d399" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="panel" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#111a2e" stop-opacity="0.92"/>
+      <stop offset="100%" stop-color="#0b1220" stop-opacity="0.92"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="256" height="256" rx="56" fill="#0b1220"/>
+  <rect width="256" height="256" rx="56" fill="url(#g1)"/>
+  <rect width="256" height="256" rx="56" fill="url(#g2)"/>
+
+  <rect x="40" y="64" width="176" height="128" rx="22" fill="url(#panel)" stroke="rgba(255,255,255,0.16)" stroke-width="2"/>
+  <rect x="40" y="64" width="176" height="32" rx="22" fill="rgba(255,255,255,0.06)"/>
+  <circle cx="62" cy="80" r="6" fill="rgba(255,255,255,0.18)"/>
+  <circle cx="82" cy="80" r="6" fill="rgba(255,255,255,0.18)"/>
+  <circle cx="102" cy="80" r="6" fill="rgba(255,255,255,0.18)"/>
+
+  <text x="68" y="146" font-family="ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace"
+        font-size="44" fill="rgba(255,255,255,0.90)">
+    &gt;_
+  </text>
+</svg>
+
+
