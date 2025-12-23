@@ -6,10 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Primitive Mindbox integration test site">
     <meta name="theme-color" content="#0b1220">
-
+    <link rel="prefetch" href="https://api.mindbox.ru/scripts/v1/tracker.js" />
     <link rel="manifest" href="/manifest.json">
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.svg">
+    <link rel="stylesheet" href="/sandbox.css">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -28,11 +29,8 @@
 
         window.__SANDBOX_CONFIG = cfg;
     </script>
-
-    <script src="/bootstrap.js"></script>
-    <link rel="stylesheet" href="/sandbox.css">
-
     <script src="https://api.mindbox.ru/scripts/v1/tracker.js" async></script>
+    <script src="/bootstrap.js"></script>
 </head>
 <body>
     <main id="app"></main>
